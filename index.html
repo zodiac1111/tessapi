@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<head>
+	<title>测试页面</title>
+	<script type="text/javascript" src="/jquery-1.9.1.min.js"></script>
+</head>
+<html>
+	<body>
+			<form id="testform" method="post" action="/cgi-bin/1.cgi">
+			<select name="file">
+				<option value="uart">串口参数</option>
+				<option value="eth">网口参数</option>
+				<option value="channal">通道参数</option>
+			</select>
+			编号
+			<input name="id" type="text" value="0">
+			波特率
+			<input name="baud" type="text" value="9600">
+			数据位
+			<input name="databit" type="text" value="8">
+			停止位
+			<input name="stopbit" type="text" value="1">
+			校验位
+			<input name="parity" type="text" value="n">
+			<br/>
+			编号
+			<input name="id" type="text" value="1">
+			波特率
+			<input name="baud" type="text" value="9600">
+			数据位
+			<input name="data" type="text" value="8">
+			停止位
+			<input name="stop" type="text" value="1">
+			校验位
+			<input name="pbit" type="text" value="e">
+			<br/>
+			<input name="ok" type="submit" value="OK">
+			<input name="cancel"type="reset" value="RESET">
+		</form>
+		<input id="test" type="submit" value="ajax-test">
+		<input id="return" type="text" value="...">
+		<script type="text/javascript">
+			$(document).ready(function() {
+				/* 按钮 */
+				var obtnUpdate = $("#test");
+				obtnUpdate.click(function() {
+					$.ajax({
+						type : "post",
+						url : "http://127.0.0.1:8080/cgi-bin/api.cgi",
+						contentType : "application/x-www-form-urlencoded; charset=utf-8",
+						dataType : "text",
+						data : "http://freebitco.in/captchas/tqnixkue.jpg",
+						success : function(result, textStatus) {
+							$("#return")[0].value=result;
+						},
+						error : function() {//失败
+							alert("服务器通讯错误");
+						}
+					});
+				});
+			});
+		</script>
+	</body>
+</html>
