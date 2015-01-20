@@ -15,10 +15,9 @@ int main(int argc, char* argv[])
 	char *outText;
 #if DEBUG
 	if(argc<2){
-		printf("api <图片>\n");
+		printf("api <图片网址>\n");
 		return 0;
 	}
-
 #else
 	printf("content-type:text/html;charset=utf8\n\n");
 	char *method;
@@ -34,15 +33,21 @@ int main(int argc, char* argv[])
 	int len = atoi(getenv("CONTENT_LENGTH"));
 	char* data = (char*) malloc(sizeof(char)*(len+1));
 	scanf("%s", data);
+#endif
 
-	//printf("数据:%s",data);
+
+#if DEBUG
+#else
+	//if(download_pic(argv[1])<0) //网址模式
 	if(download_pic(data)<0)
+
 	{	printf("下载失败\n");
 		return -1;
 	}
 #endif
 	tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
 	// Initialize tesseract-ocr with English, without specifying tessdata path
+	// 指定使用英文
 	if (api->Init(NULL, "eng")) {
 		fprintf(stderr, "Could not initialize tesseract.\n");
 		exit(1);
@@ -55,12 +60,14 @@ int main(int argc, char* argv[])
 	Pix *image = pixRead(filename);
 #endif
 	api->SetImage(image);
-	api->SetVariable("tessedit_char_whitelist", "012345789");
+	// 设置可识别出来的字符
+	api->SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ:");
 	//api->Recognize(0);
-
-	api->SetRectangle(62, 21, 35, 10);
-	//api->SetPageSegMode(tesseract::PSM_AUTO);
+	//设置识别区域 x,y,宽,高
+	api->SetRectangle(0, 0, 700, 15);
+	//api->SetPageSegMode(tesseract::PSM_AUTO_OSD);
 	// Get OCR result
+	//得到字符
 	outText = api->GetUTF8Text();
 	printf("%s", outText);
 
@@ -70,6 +77,7 @@ int main(int argc, char* argv[])
 	pixDestroy(&image);
 
 	return 0;
+
 }
 /**
  * 使用curl库下载图片到服务器,供识别使用.

@@ -1,11 +1,15 @@
 //刷新简历
 $(document).ready(function() {
 	setInterval(function() {
-		reload();
-	}, 5 * 60 * 1000);
+		check();
+	}, 5 * 1000);
 	setInterval(function() {
 		error();
-	}, 10 * 1000);
+	}, 5 * 1000);
+
+});
+function check() {
+	//console.log("检查 " + Date());
 	var a = 0;
 	var ret;
 	var isPlay = $("#free_play")[0].style.cssText != "display: none;";
@@ -14,9 +18,6 @@ $(document).ready(function() {
 		console.log("开始post " + Date());
 		post(cap[0].src);
 	}
-});
-function reload() {
-	location.reload();
 }
 
 function post(pic_url) {
@@ -36,7 +37,7 @@ function post(pic_url) {
 			console.log("post完成 " + result + Date());
 		},
 		error : function() {//失败
-			alert("服务器通讯错误");
+			console.log("!!!!服务器通讯错误 "  + Date());
 		}
 	});
 	//return "1234";
@@ -44,7 +45,7 @@ function post(pic_url) {
 
 function error() {
 	var notOk = $("#free_play_error")[0].textContent == "Incorrect number entered";
-	
+
 	if (notOk) {
 		var cap = $("#free_play_captcha_image");
 		post(cap[0].src);
